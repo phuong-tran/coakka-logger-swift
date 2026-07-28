@@ -23,6 +23,11 @@ Use these public repositories to orient first:
 | `coakka-samples` | Runnable examples and code you can inspect first. | https://github.com/phuong-tran/coakka-samples |
 | `coakka-publish` | Released packages, native archives, manifests, checksums, compatibility matrix, and release notes. | https://github.com/phuong-tran/coakka-publish |
 
+Read the deeper package docs:
+
+- [Why CoAkka Logger matters](docs/coakka-logger.md)
+- [CoAkka ecosystem map](docs/coakka-ecosystem.md)
+
 ## First Run From Source
 
 ```sh
