@@ -1,0 +1,93 @@
+# CoAkka Logger Swift Connector
+
+[![CI](https://github.com/phuong-tran/coakka-logger-swift/actions/workflows/swift-ci.yml/badge.svg)](https://github.com/phuong-tran/coakka-logger-swift/actions/workflows/swift-ci.yml)
+[![Version](https://img.shields.io/badge/version-v1.2.1-blue)](https://github.com/phuong-tran/coakka-logger-swift/releases/tag/v1.2.1)
+[![License](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
+[![Funding](https://img.shields.io/badge/funding-Ko--fi-ff5f5f)](https://ko-fi.com/phuongnamtran)
+
+SwiftPM connector package for the standalone CoAkka native logger core.
+
+The current Swift logger lane targets macOS ARM64. Mobile platforms are not
+part of this release plan.
+
+## New To CoAkka Logger
+
+CoAkka Logger gives a host application a small language-native logging API
+while the native core owns queueing, pressure behavior, drain semantics, sink
+behavior, and platform library loading.
+
+Use these public repositories to orient first:
+
+| Repository | Use it for | Link |
+| --- | --- | --- |
+| `coakka-samples` | Runnable examples and code you can inspect first. | https://github.com/phuong-tran/coakka-samples |
+| `coakka-publish` | Released packages, native archives, manifests, checksums, compatibility matrix, and release notes. | https://github.com/phuong-tran/coakka-publish |
+
+## First Run From Source
+
+```sh
+bash scripts/smoke-package.sh
+```
+
+The smoke stages the macOS ARM64 native logger library, runs `swift test`, and
+executes the package smoke binary.
+
+Run a clean SwiftPM consumer smoke:
+
+```sh
+bash scripts/smoke-consumer.sh
+```
+
+Export the package into a public SwiftPM repository checkout:
+
+```sh
+bash scripts/export-module-repo.sh ../coakka-logger-swift
+```
+
+## API Shape
+
+```swift
+import CoAkkaLogger
+
+let logger = try Logger.start(
+    spec: LoggerSpec(systemName: "swift-first-run", minLevel: .info)
+)
+defer {
+    try? logger.close()
+}
+
+let sequence = try logger.info("orders", #"{"event":"accepted"}"#)
+let record = try logger.awaitNext(timeoutMs: 1_000)
+print(sequence ?? 0, record?.category ?? "", record?.message ?? "")
+```
+
+The Swift API is intentionally small:
+
+- `Logger.start(...)` owns native logger lifecycle
+- `info`, `warn`, `error`, `debug`, `trace`, and `fatal` submit records
+- `awaitNext(...)` drains the manual-drain path used by tests and samples
+- `stats()` exposes the bounded queue counters needed for smoke and diagnostics
+
+## Native Boundary
+
+The package wraps the public logger C ABI and bundles one macOS ARM64 native
+logger library staged from:
+
+```text
+logger/staging/native/1.2.1+f50756ebff0d/
+```
+
+The bundled resource is:
+
+```text
+Sources/CoAkkaLogger/Resources/macos-aarch64/libcoakka_logger_core.10.dylib
+```
+
+There should be no Linux `.so` files or Windows `.dll` files in this Swift lane.
+Runtime connector work is a separate future lane.
+
+Verify that payload shape directly:
+
+```sh
+bash scripts/verify-native-payload.sh
+```

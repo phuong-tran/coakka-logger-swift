@@ -1,0 +1,4 @@
+module CoAkkaLoggerC {
+  header "coakka_logger_bridge.h"
+  export *
+}
