@@ -7,28 +7,38 @@ lifecycle state.
 
 ## The Boundary It Improves
 
-Logging often looks harmless until the system is already stressed:
+Logging often looks harmless until the system is already stressed. Many
+logging stacks become unreliable exactly when operators need them most:
+
+- synchronous sinks stall request, worker, or event-loop paths
+- asynchronous appenders hide queue growth until RAM and latency spike
+- implicit drop behavior loses records without a clean emitted, delivered,
+  dropped, or rejected account
+- language-by-language adapters drift in semantics, counters, and diagnostics
+
+The common shape is:
 
 ```text
 app code -> async appender -> hidden queue growth or silent loss
 ```
 
-CoAkka Logger makes that boundary explicit:
+CoAkka Logger is designed to be narrower and more predictable:
 
 ```text
 app code -> bounded native logger -> accepted, delivered, dropped, and drained evidence
 ```
 
-The useful claim is not "another logging facade." The useful claim is that the
-host can observe queue capacity, accepted records, delivered records, dropped
-records, and native version information in the same shape across languages.
+The useful claim is not "another logging facade" and not "log output looks
+prettier." The useful claim is that the host can observe queue capacity,
+accepted records, delivered records, dropped records, rejected writes, drain
+state, and native version information in the same shape across languages.
 
 ## What The Logger Owns
 
 | Concern | Logger role |
 | --- | --- |
 | Bounded queue | Keep log intake bounded instead of pretending memory is infinite. |
-| Pressure behavior | Reject or drop according to the configured logger policy. |
+| Pressure behavior | Reject or drop explicitly according to the configured logger policy. |
 | Counters | Report emitted, delivered, dropped, queue depth, and high-water marks. |
 | Drain semantics | Let samples and embedding tests read records deterministically. |
 | Native identity | Report native ABI, version, and git generation for support and release checks. |
@@ -61,6 +71,7 @@ CoAkka Logger is useful when:
 - async logging hides queue growth until latency or memory spikes
 - loss under pressure is possible but hard to measure
 - each language adapter reports different counters
+- synchronous sink behavior can stall hot request or worker paths
 - native-backed runtime diagnostics should share one operational vocabulary
 - tests need deterministic drain behavior instead of scraping console output
 
@@ -69,7 +80,7 @@ and existing logging behavior is already bounded and easy to audit.
 
 ## Read Next
 
-- Runnable logger samples: `https://github.com/phuong-tran/coakka-samples/tree/main/logger`
-- Production readiness: `https://github.com/phuong-tran/coakka-samples/blob/main/docs/production-readiness.md`
-- Compatibility: `https://github.com/phuong-tran/coakka-publish/blob/main/docs/compatibility-matrix.md`
-- Ecosystem map: `coakka-ecosystem.md`
+- [Runnable logger samples](https://github.com/phuong-tran/coakka-samples/tree/main/logger)
+- [Production readiness](https://github.com/phuong-tran/coakka-samples/blob/main/docs/production-readiness.md)
+- [Compatibility matrix](https://github.com/phuong-tran/coakka-publish/blob/main/docs/compatibility-matrix.md)
+- [Ecosystem map](coakka-ecosystem.md)
