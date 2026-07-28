@@ -10,6 +10,22 @@ SwiftPM connector package for the standalone CoAkka native logger core.
 The current Swift logger lane targets macOS ARM64. Mobile platforms are not
 part of this release plan.
 
+SwiftPM package URL:
+
+```text
+https://github.com/phuong-tran/coakka-logger-swift.git
+```
+
+Use the exact version `1.2.1`.
+
+Public package links:
+
+| Link | Purpose |
+| --- | --- |
+| [GitHub Release v1.2.1](https://github.com/phuong-tran/coakka-logger-swift/releases/tag/v1.2.1) | SwiftPM package release with the macOS ARM64 native logger. |
+| [Logger sample](https://github.com/phuong-tran/coakka-samples/tree/main/logger/swift/basic) | Runnable bounded logger sample. |
+| [Compatibility matrix](https://github.com/phuong-tran/coakka-publish/blob/main/docs/compatibility-matrix.md) | Current native generation and package-manager status. |
+
 ## New To CoAkka Logger
 
 CoAkka Logger gives a host application a small language-native logging API
