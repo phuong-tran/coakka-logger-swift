@@ -1,5 +1,9 @@
 # CoAkka Logger Swift Connector
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/phuong-tran/coakka-samples/main/docs/assets/brand/coakka-logo.png" alt="CoAkka" width="480">
+</p>
+
 [![CI](https://github.com/phuong-tran/coakka-logger-swift/actions/workflows/swift-ci.yml/badge.svg)](https://github.com/phuong-tran/coakka-logger-swift/actions/workflows/swift-ci.yml)
 [![Version](https://img.shields.io/badge/version-v1.2.1-blue)](https://github.com/phuong-tran/coakka-logger-swift/releases/tag/v1.2.1)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
@@ -7,8 +11,8 @@
 
 SwiftPM connector package for the standalone CoAkka native logger core.
 
-The current Swift logger lane targets macOS ARM64. Mobile platforms are not
-part of this release plan.
+The current Swift logger package supports macOS ARM64. Use the compatibility
+matrix for exact package and native-platform evidence.
 
 SwiftPM package URL:
 
@@ -104,8 +108,11 @@ The bundled resource is:
 Sources/CoAkkaLogger/Resources/macos-aarch64/libcoakka_logger_core.10.dylib
 ```
 
-There should be no Linux `.so` files or Windows `.dll` files in this Swift lane.
-Runtime connector work is a separate future lane.
+There should be no Linux `.so` files or Windows `.dll` files in this logger
+package. The separately versioned
+[`coakka-runtime-swift`](https://github.com/phuong-tran/coakka-runtime-swift)
+package is the current Swift runtime lane and carries five runtime payloads;
+this logger package remains intentionally macOS ARM64.
 
 Verify that payload shape directly:
 
