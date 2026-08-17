@@ -5,6 +5,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 swift_root="$(cd "${script_dir}/.." && pwd)"
 resource_root="${swift_root}/Sources/CoAkkaLogger/Resources"
 native_path="${resource_root}/macos-aarch64/libcoakka_logger_core.10.dylib"
+expected_sha256="28db676f3a56ea67c909697d82453edd76372bd8c9916dd43250f453cfedc87e"
 
 if [[ ! -f "${native_path}" ]]; then
   echo "[swift-verify-logger-payload] missing macOS ARM64 native: ${native_path}" >&2
@@ -31,4 +32,18 @@ if ! file "${native_path}" | grep -q 'Mach-O 64-bit dynamically linked shared li
   exit 1
 fi
 
-echo "[swift-verify-logger-payload] ok"
+actual_sha256="$(shasum -a 256 "${native_path}" | awk '{print $1}')"
+if [[ "${actual_sha256}" != "${expected_sha256}" ]]; then
+  echo "[swift-verify-logger-payload] digest mismatch: ${actual_sha256}" >&2
+  exit 1
+fi
+
+macos_build_version="$(xcrun vtool -show-build "${native_path}")"
+macos_minos="$(printf '%s\n' "${macos_build_version}" | awk '$1 == "minos" { print $2 }')"
+if [[ "${macos_minos}" != "13.0" ]]; then
+  echo "[swift-verify-logger-payload] expected macOS deployment target 13.0, got ${macos_minos:-missing}" >&2
+  printf '%s\n' "${macos_build_version}" >&2
+  exit 1
+fi
+
+echo "[swift-verify-logger-payload] ok macOS deployment target=13.0"

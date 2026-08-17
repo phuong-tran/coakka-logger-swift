@@ -5,7 +5,7 @@
 </p>
 
 [![CI](https://github.com/phuong-tran/coakka-logger-swift/actions/workflows/swift-ci.yml/badge.svg)](https://github.com/phuong-tran/coakka-logger-swift/actions/workflows/swift-ci.yml)
-[![Version](https://img.shields.io/badge/version-v1.2.1-blue)](https://github.com/phuong-tran/coakka-logger-swift/releases/tag/v1.2.1)
+[![Version](https://img.shields.io/badge/version-v1.2.2-blue)](https://github.com/phuong-tran/coakka-logger-swift/releases/tag/v1.2.2)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
 [![Funding](https://img.shields.io/badge/funding-Ko--fi-ff5f5f)](https://ko-fi.com/phuongnamtran)
 
@@ -20,13 +20,13 @@ SwiftPM package URL:
 https://github.com/phuong-tran/coakka-logger-swift.git
 ```
 
-Use the exact version `1.2.1`.
+Use the exact version `1.2.2`.
 
 Public package links:
 
 | Link | Purpose |
 | --- | --- |
-| [GitHub Release v1.2.1](https://github.com/phuong-tran/coakka-logger-swift/releases/tag/v1.2.1) | SwiftPM package release with the macOS ARM64 native logger. |
+| [GitHub Release v1.2.2](https://github.com/phuong-tran/coakka-logger-swift/releases/tag/v1.2.2) | SwiftPM package release with the macOS ARM64 native logger. |
 | [Logger sample](https://github.com/phuong-tran/coakka-samples/tree/main/logger/swift/basic) | Runnable bounded logger sample. |
 | [Compatibility matrix](https://github.com/phuong-tran/coakka-publish/blob/main/docs/compatibility-matrix.md) | Current native generation and package-manager status. |
 
@@ -96,11 +96,10 @@ The Swift API is intentionally small:
 ## Native Boundary
 
 The package wraps the public logger C ABI and bundles one macOS ARM64 native
-logger library staged from:
-
-```text
-logger/staging/native/1.2.1+f50756ebff0d/
-```
+logger library rebuilt from exact native snapshot
+`f50756ebff0d2635243093baf533993c4d9fe9dc`. The logical native generation
+remains `1.2.1+f50756ebff0d`; package `1.2.2` corrects the dylib deployment
+target to macOS `13.0` without changing the public logger ABI.
 
 The bundled resource is:
 
@@ -119,3 +118,7 @@ Verify that payload shape directly:
 ```sh
 bash scripts/verify-native-payload.sh
 ```
+
+The verifier pins SHA-256
+`28db676f3a56ea67c909697d82453edd76372bd8c9916dd43250f453cfedc87e`
+and rejects a Mach-O minimum OS version other than `13.0`.
